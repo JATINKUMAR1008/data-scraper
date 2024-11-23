@@ -2,13 +2,14 @@ import { relations } from "drizzle-orm/relations";
 import { authMethods, userRoles, usersTable } from "./user";
 import { organizationsTable } from "./org";
 import { rolesTable } from "./roles";
+import { workflowTable } from "./workflows";
 
-// export const userOrganizationsRelations = relations(usersTable, ({ many }) => ({
-//   user: many(usersTable, {
-//     fields: [organizationsTable.userId],
-//     references: [userRoles.userId],
-//   }),
-// }));
+export const userWorkflowRelation = relations(workflowTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [workflowTable.userId],
+    references: [usersTable.id],
+  }),
+}));
 
 export const userRolesRelations = relations(userRoles, ({ one }) => ({
   user: one(usersTable, {

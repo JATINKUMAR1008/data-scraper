@@ -1,4 +1,9 @@
 export { userRoles, usersTable, authMethods } from "./user";
 export { organizationsTable } from "./org";
-export { rolesTable } from "./roles";
-export { userRolesRelations, authMethodsRelations } from "./relations";
+export { rolesTable, role_enum } from "./roles";
+export {
+  userRolesRelations,
+  authMethodsRelations,
+  userWorkflowRelation,
+} from "./relations";
+export { workflowTable } from "./workflows";

@@ -51,7 +51,11 @@ export async function signIn(
   }
   const userId = user.id.toString();
   await createSession(userId);
-  redirect("/");
+  if (user.isNew) {
+    redirect("/welcome");
+  } else {
+    redirect("/");
+  }
 }
 
 const google = new Google(
@@ -113,7 +117,7 @@ export async function handleGoogleCallback(searchParams: URLSearchParams) {
     );
     const googleUserResponse = await fetch(
       "https://openidconnect.googleapis.com/v1/userinfo",
-      //@ts-ignore
+      //@ts-expect-error not added type of token
       { headers: { Authorization: `Bearer ${tokens.data?.access_token}` } }
     );
     const googleUser = await googleUserResponse.json();

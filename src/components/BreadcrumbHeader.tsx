@@ -22,7 +22,7 @@ export const BreadcrumbHeader = () => {
             <React.Fragment key={index}>
               <BreadcrumbItem>
                 <BreadcrumbLink className="capitalize" href={`/${path}`}>
-                  {path === "" ? "home" : path}
+                  {path === "" ? "home/" : `${path}/`}
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </React.Fragment>

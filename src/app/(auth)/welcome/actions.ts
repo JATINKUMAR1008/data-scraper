@@ -1,6 +1,5 @@
 "use server";
 
-import { error } from "console";
 import { FormState, OrganizationSchema } from "../definitions";
 import { db } from "@/db";
 import {
@@ -43,15 +42,16 @@ export async function createOrg(
     });
   const user = await getUser();
   console.log(user);
+  
   const role = await db
     .insert(rolesTable)
     .values({
-      name: "Admin",
+      name: "ADMIN",
     })
     .returning({
       roleId: rolesTable.id,
     });
-  const relation = await db.insert(userRoles).values({
+  await db.insert(userRoles).values({
     userId: user?.id!,
     organizationId: newOrg[0].insertedId,
     roleId: role[0].roleId,

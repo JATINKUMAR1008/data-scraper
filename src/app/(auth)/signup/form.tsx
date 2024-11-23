@@ -6,8 +6,6 @@ import { ChevronRightIcon } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { signUp } from "./action";
-import { error } from "console";
-import { stat } from "fs";
 
 export const SignUpForm = () => {
   const [state, action] = useActionState(signUp, undefined);

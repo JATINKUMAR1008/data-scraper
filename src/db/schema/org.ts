@@ -1,6 +1,5 @@
 import { InferInsertModel } from "drizzle-orm";
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { usersTable } from "./user";
 
 export const organizationsTable = pgTable("organizations", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

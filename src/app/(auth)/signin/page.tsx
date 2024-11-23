@@ -1,7 +1,5 @@
-import Image from "next/image";
-import GoogleSvg from "../../../../public/google-icon-logo-svgrepo-com.svg";
 import { LoginForm } from "./form";
-import { signIn, signInByGoogle } from "./action";
+import { signInByGoogle } from "./action";
 import { redirect } from "next/navigation";
 import { GoogleButton } from "./googleButton";
 import Link from "next/link";
@@ -33,7 +31,7 @@ export default function SingInPage() {
       </div>
       <div className="text-center w-full mt-5">
         <p className="text-muted-foreground text-xs">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="signup" className="text-primary hover:underline">
             Sign up
           </Link>

@@ -53,5 +53,5 @@ export const signUp = async (
     provider: "email",
   });
   await createSession(user[0].id.toString());
-  redirect("/");
+  redirect("/welcome");
 };
