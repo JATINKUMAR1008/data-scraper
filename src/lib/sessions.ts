@@ -54,10 +54,20 @@ export async function verifySession() {
   const session = await decrypt(cookie);
 
   if (!session?.userId) {
-    redirect("/signin");
+    return { isAuth: false, userId: null };
   }
 
   return { isAuth: true, userId: Number(session.userId) };
+}
+
+export async function requireAuth() {
+  const { isAuth, userId } = await verifySession();
+  
+  if (!isAuth) {
+    redirect("/signin");
+  }
+  
+  return { userId };
 }
 
 export async function updateSession() {
@@ -83,13 +93,13 @@ export async function deleteSession() {
 }
 
 export const getUser = cache(async () => {
-  const session = await verifySession();
+  const session = await requireAuth();
   if (!session) {
     return null;
   }
   try {
     const data = await db.query.usersTable.findFirst({
-      where: eq(usersTable.id, session.userId),
+      where: eq(usersTable.id, Number(session.userId)),
       columns: {
         id: true,
         firstName: true,

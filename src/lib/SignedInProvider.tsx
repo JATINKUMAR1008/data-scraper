@@ -1,7 +1,7 @@
-import { verifySession } from "./sessions";
+import { requireAuth, verifySession } from "./sessions";
 
-export const SignedIn = ({ children }: { children: React.ReactNode }) => {
-  const session = verifySession();
+export const SignedIn = async ({ children }: { children: React.ReactNode }) => {
+  const session = await requireAuth();
   if (!session) {
     return null;
   }
