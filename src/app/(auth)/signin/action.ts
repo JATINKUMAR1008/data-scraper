@@ -138,7 +138,7 @@ export async function handleGoogleCallback(searchParams: URLSearchParams) {
       .values({
         email: googleUser.email,
         firstName: googleUser.given_name,
-        lastName: googleUser.family_name,
+        lastName: googleUser.family_name ? googleUser.family_name : " ",
       })
       .returning({
         isNew: usersTable.isNew,
