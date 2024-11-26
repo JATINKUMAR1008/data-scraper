@@ -11,5 +11,8 @@ export const workflowTable = pgTable("workflows", {
   status: varchar(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  lastRunAt: timestamp("last_run_at"),
+  lastRunStatus: varchar("last_run_status"),
+  lastRunId: integer("last_run_id"),
 });
-export type Workflow = InferInsertModel<typeof workflowTable>
+export type Workflow = InferInsertModel<typeof workflowTable>;

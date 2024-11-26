@@ -6,6 +6,7 @@ import {
   Layers2Icon,
   MenuIcon,
   ShieldCheckIcon,
+  User,
 } from "lucide-react";
 import { Logo } from "./Logo";
 import Link from "next/link";
@@ -13,6 +14,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useState } from "react";
+import UserAvaliableCredits from "./UserAvaliableCredits";
 
 const routes = [
   {
@@ -46,6 +48,9 @@ export const Sidebar = () => {
     <div className="hidden relative md:block min-w-[280px] max-w-[280px] h-screen overflow-hidden w-full bg-primary/5 dark:bg-secondary/30 dark:text-foreground text-muted-foreground border-r-2 border-separate">
       <div className="flex items-center justify-center gap-2 border-b-[1px] border-separate p-4">
         <Logo />
+      </div>
+      <div className="p-2">
+        <UserAvaliableCredits />
       </div>
       <div className="flex flex-col space-y-2 p-2">
         {routes.map((route) => (
@@ -89,6 +94,7 @@ export function MobileSidebar() {
             className="w-[480px] sm:w-[540px] space-y-4"
           >
             <Logo />
+            <UserAvaliableCredits />
             <div className=" flex flex-col gap-1">
               {routes.map((route) => (
                 <Link

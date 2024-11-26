@@ -45,4 +45,9 @@ export const userRoles = pgTable("user_roles", {
   assignedAt: timestamp("assigned_at").notNull().defaultNow(),
 });
 
+export const UserBalance = pgTable("user_balance", {
+  userId: integer("user_id").references(() => usersTable.id),
+  credits: integer().default(0),
+});
+
 export type User = InferInsertModel<typeof usersTable>;

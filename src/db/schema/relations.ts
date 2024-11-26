@@ -1,8 +1,13 @@
 import { relations } from "drizzle-orm/relations";
-import { authMethods, userRoles, usersTable } from "./user";
+import { authMethods, UserBalance, userRoles, usersTable } from "./user";
 import { organizationsTable } from "./org";
 import { rolesTable } from "./roles";
 import { workflowTable } from "./workflows";
+import {
+  ExecutionLogs,
+  ExecutionPhase,
+  workflowExecutionTable,
+} from "./executions";
 
 export const userWorkflowRelation = relations(workflowTable, ({ one }) => ({
   user: one(usersTable, {
@@ -31,4 +36,32 @@ export const authMethodsRelations = relations(authMethods, ({ one }) => ({
     fields: [authMethods.userId],
     references: [usersTable.id],
   }),
+}));
+
+export const executionPhaseRelations = relations(ExecutionPhase, ({ one }) => ({
+  execution: one(workflowExecutionTable, {
+    fields: [ExecutionPhase.executionId],
+    references: [workflowExecutionTable.id],
+  }),
+}));
+
+export const workflowExecutionRelations = relations(
+  workflowExecutionTable,
+  ({ one, many }) => ({
+    phases: many(ExecutionPhase), // Define the relationship to ExecutionPhase
+  })
+);
+
+export const executionLogsRelations = relations(ExecutionLogs, ({ one }) => ({
+  phase: one(ExecutionPhase, {
+    fields: [ExecutionLogs.executionPhaseId],
+    references: [ExecutionPhase.id],
+  }),
+}));
+export const phaseToExecution = relations(ExecutionPhase, ({ one, many }) => ({
+  logs: many(ExecutionLogs),
+}));
+
+export const balanceTOUser = relations(usersTable, ({ one }) => ({
+  balance: one(UserBalance),
 }));

@@ -1,3 +1,4 @@
+import { useFlowValidation } from "@/hooks/flowValidation";
 import { cn } from "@/lib/utils";
 import { useReactFlow } from "@xyflow/react";
 import React from "react";
@@ -12,6 +13,8 @@ export const NodeCard = ({
   isSelected: boolean;
 }) => {
   const { getNode, setCenter } = useReactFlow();
+  const { invalidInputs } = useFlowValidation();
+  const hasInvalidInputs = invalidInputs.some((i) => i.nodeId === nodeId);
   return (
     <div
       onDoubleClick={() => {
@@ -34,8 +37,9 @@ export const NodeCard = ({
         });
       }}
       className={cn(
-        "rounded-md cursor-pointer bg-background border-2 border-separate w-[420px] text-xs gap-1 flex flex-col",
-        isSelected && "border-blue-500"
+        "rounded-md cursor-pointer bg-background border-2 border-separate w-[420px] text-xs gap-[1px]  flex flex-col",
+        isSelected && "border-blue-500",
+        hasInvalidInputs && "border-destructive border-2"
       )}
     >
       {children}

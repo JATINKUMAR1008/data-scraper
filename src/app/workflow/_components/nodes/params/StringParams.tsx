@@ -2,29 +2,39 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ParamProps } from "@/types/appNodes";
 import { TaskParam } from "@/types/task";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 export const StringParams = ({
   param,
   value,
   updateNodeParamValue,
+  disabled,
 }: ParamProps) => {
   const [internalValue, setInternalValue] = useState(value);
   const id = useId();
+  useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
+  let Component: any = Input;
+  if (param.variant === "textarea") {
+    Component = Textarea;
+  }
   return (
     <div className="space-y-1 p-1 w-full">
       <Label htmlFor={id} className="text-xs flex">
         {param.name}
         {param.required && <p className="text-red-400 px-2">*</p>}
       </Label>
-      <Input
+      <Component
         id={id}
         value={internalValue}
         placeholder="Enter value here"
-        onChange={(e) => setInternalValue(e.target.value)}
+        onChange={(e: any) => setInternalValue(e.target.value)}
         onBlur={() => updateNodeParamValue(internalValue)}
+        disabled={disabled}
       />
       {param.helperText && (
         <p className="text-muted-foreground px-2">{param.helperText}</p>
