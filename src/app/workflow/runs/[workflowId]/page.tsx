@@ -4,17 +4,18 @@ import { Suspense } from "react";
 import { InboxIcon, Loader2Icon } from "lucide-react";
 import ExecutionTable from "./_components/ExecutionTable";
 
-export default function ExecutionPage({
+export default async function ExecutionPage({
   params,
 }: {
-  params: {
+  params: Promise<{
     workflowId: string;
-  };
+  }>;
 }) {
+  const param = await params;
   return (
     <div className="w-full h-full overflow-auto">
       <Topbar
-        workflowId={Number(params.workflowId)}
+        workflowId={Number(param.workflowId)}
         hideButtons
         title="All runs"
         subTitle="List of all workflow runs"
@@ -26,7 +27,7 @@ export default function ExecutionPage({
           </div>
         }
       >
-        <ExecutionTableWrapper workflowId={params.workflowId} />
+        <ExecutionTableWrapper workflowId={param.workflowId} />
       </Suspense>
     </div>
   );
