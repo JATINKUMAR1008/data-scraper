@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { FormState, SingUpSchema } from "../definitions";
 import { eq } from "drizzle-orm";
-import { authMethods, usersTable } from "@/db/schema";
+import { authMethods, UserBalance, usersTable } from "@/db/schema";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/sessions";
 import { redirect } from "next/navigation";
@@ -51,6 +51,10 @@ export const signUp = async (
     userId: user[0].id!,
     passwordHash: hashedPassword,
     provider: "email",
+  });
+  await db.insert(UserBalance).values({
+    userId: user[0].id!,
+    credits: 0,
   });
   await createSession(user[0].id.toString());
   redirect("/welcome");

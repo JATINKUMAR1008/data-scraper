@@ -1,7 +1,7 @@
 "use server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/index";
-import { authMethods, usersTable } from "@/db/schema";
+import { authMethods, UserBalance, usersTable } from "@/db/schema";
 import { FormState, SignInSchema } from "../definitions";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/sessions";
@@ -153,6 +153,10 @@ export async function handleGoogleCallback(searchParams: URLSearchParams) {
       providerU_ID: googleUser.sub,
       provider: "google",
       passwordHash: "",
+    });
+    await db.insert(UserBalance).values({
+      userId: user[0].id!,
+      credits: 0,
     });
 
     return user[0];
