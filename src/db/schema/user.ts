@@ -46,6 +46,7 @@ export const userRoles = pgTable("user_roles", {
 });
 
 export const UserBalance = pgTable("user_balance", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   userId: integer("user_id").references(() => usersTable.id),
   credits: integer().default(0),
 });
