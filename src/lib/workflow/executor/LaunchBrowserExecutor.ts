@@ -13,7 +13,7 @@ export async function LaunchBrowserExecutor(
     let Browser = null;
     if (process.env.NODE_ENV === "production") {
       Browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
         headless: chromium.headless,
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),

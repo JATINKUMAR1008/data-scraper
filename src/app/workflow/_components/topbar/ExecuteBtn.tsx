@@ -43,7 +43,7 @@ export const ExecuteBtn = ({ workflowId }: { workflowId: number }) => {
       }}
       className="flex items-center gap-2"
     >
-      <PlayIcon size={16} className="stroke-orage-400" />
+      <PlayIcon size={16} className="stroke-orange-400" />
       Execute
     </Button>
   );

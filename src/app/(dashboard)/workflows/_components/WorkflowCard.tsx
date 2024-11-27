@@ -26,7 +26,7 @@ import { DeleteWorkflowDialog } from "./DeleteWorkfloeDialog";
 
 const statusColors = {
   [WorkflowStatus.DRAFT]: "bg-yellow-400 text-yellow-600",
-  [WorkflowStatus.PUBLISHED]: "bg-primary",
+  [WorkflowStatus.PUBLISHED]: "bg-green-500",
 };
 
 export type WorkFlowProps = Workflow & {
@@ -59,9 +59,13 @@ export const WorkFlowCard = ({ workflow }: { workflow: WorkFlowProps }) => {
               >
                 {workflow.name}
               </Link>
-              {isDraft && (
+              {isDraft ? (
                 <span className="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">
                   Draft
+                </span>
+              ):(
+                <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
+                  Published
                 </span>
               )}
             </h3>

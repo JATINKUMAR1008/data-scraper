@@ -1,4 +1,10 @@
-import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { usersTable } from "./user";
 import { InferInsertModel } from "drizzle-orm";
 
@@ -14,5 +20,7 @@ export const workflowTable = pgTable("workflows", {
   lastRunAt: timestamp("last_run_at"),
   lastRunStatus: varchar("last_run_status"),
   lastRunId: integer("last_run_id"),
+  executionPlan: text(),
+  creditsCost: integer().default(0),
 });
 export type Workflow = InferInsertModel<typeof workflowTable>;
