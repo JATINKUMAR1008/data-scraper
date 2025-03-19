@@ -3,17 +3,21 @@ import { Suspense } from "react";
 import PeriodSelector from "./_components/periodSelector";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { month: string; year: string };
-}) {
+interface HomeProps {
+  searchParams: Promise<{
+    month?: string;
+    year?: string;
+  }>;
+}
+
+export default async function Home({ searchParams }: HomeProps) {
   const currentDate = new Date();
-  const { month, year } = searchParams;
+  const { month, year } = await searchParams;
   const period: Period = {
     month: month ? parseInt(month) : currentDate.getMonth(),
     year: year ? parseInt(year) : currentDate.getFullYear(),
   };
+
   return (
     <div className="flex flex-1 flex-col h-full">
       <div className="flex justify-between">

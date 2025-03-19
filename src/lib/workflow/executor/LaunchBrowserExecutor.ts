@@ -24,9 +24,6 @@ export async function LaunchBrowserExecutor(
         headless: true,
       });
     }
-    // const Browser = await puppeteer.launch({
-    //   headless: true,
-    // });
     environment.log.info("Browser started successfully");
     environment.setBrowser(Browser);
     const page = await Browser.newPage();
