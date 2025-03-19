@@ -12,10 +12,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Workflow } from "@/db/schema/workflows";
 import { cn } from "@/lib/utils";
-import { WorkflowStatus } from "@/types/workflow";
 import {
+  ExecutionStatus,
+  WorkflowExecutionPhase,
+  WorkflowStatus,
+} from "@/types/workflow";
+import {
+  ChevronRightIcon,
+  ClockIcon,
+  CoinsIcon,
+  CornerDownRight,
+  CornerDownRightIcon,
   FileTextIcon,
   MoreVerticalIcon,
+  MoveRightIcon,
   PlayIcon,
   ShuffleIcon,
   TrashIcon,
@@ -23,7 +33,14 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { DeleteWorkflowDialog } from "./DeleteWorkfloeDialog";
-
+import { RunBtn } from "./RunBtn";
+import SchedulerDialog from "./SchedulerDialog";
+import { Badge } from "@/components/ui/badge";
+import ExecutionStatusIndicator, {
+  ExecutionStatusLabel,
+} from "@/app/workflow/runs/[workflowId]/_components/ExecutionStatusIndicator";
+import { format, formatDistanceToNow } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 const statusColors = {
   [WorkflowStatus.DRAFT]: "bg-yellow-400 text-yellow-600",
   [WorkflowStatus.PUBLISHED]: "bg-green-500",
@@ -63,15 +80,22 @@ export const WorkFlowCard = ({ workflow }: { workflow: WorkFlowProps }) => {
                 <span className="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">
                   Draft
                 </span>
-              ):(
+              ) : (
                 <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
                   Published
                 </span>
               )}
             </h3>
+            <ScheduleSection
+              isDraft={isDraft}
+              creditCost={workflow?.creditsCost!}
+              workflowId={workflow?.id}
+              cron={workflow?.cron!}
+            />
           </div>
         </div>
         <div className="flex items-center space-x-2">
+          {!isDraft && <RunBtn workflowId={workflow?.id} />}
           <Link
             href={`/workflow/editor/${workflow?.id}`}
             className={cn(
@@ -91,6 +115,7 @@ export const WorkFlowCard = ({ workflow }: { workflow: WorkFlowProps }) => {
           />
         </div>
       </CardContent>
+      <LastRunDetails workflow={workflow} />
     </Card>
   );
 };
@@ -137,3 +162,81 @@ const WorkFlowActions = ({
     </>
   );
 };
+
+const ScheduleSection = ({
+  isDraft,
+  creditCost,
+  workflowId,
+  cron,
+}: {
+  isDraft: boolean;
+  creditCost: number;
+  workflowId: number;
+  cron: string | null;
+}) => {
+  if (isDraft) return null;
+  return (
+    <div className="flex items-center gap-2">
+      <CornerDownRightIcon className="size-4 text-muted-foreground" />
+      <SchedulerDialog
+        workflowId={workflowId.toString()}
+        cron={cron}
+        key={`${cron}-${workflowId}`}
+      />
+      <MoveRightIcon className="size-4 text-muted-foreground" />
+      <TooltipWrapper content="Credit consumed for full run">
+        <div className="flex items-center gap-3">
+          <Badge
+            variant={"outline"}
+            className="space-x-2 text-muted-foreground rounded-sm"
+          >
+            <CoinsIcon className="size-4" />
+            <span className="text-sm">{creditCost}</span>
+          </Badge>
+        </div>
+      </TooltipWrapper>
+    </div>
+  );
+};
+
+function LastRunDetails({ workflow }: { workflow: WorkFlowProps }) {
+  const isDraft = workflow.status === WorkflowStatus.DRAFT;
+  if (isDraft) return null;
+  const { lastRunAt, lastRunStatus, nextRunAt } = workflow;
+  const formattedStartedAt =
+    lastRunAt && formatDistanceToNow(lastRunAt, { addSuffix: true });
+  const nextSchedule = nextRunAt && format(nextRunAt, "dd MMM, yyyy hh:mm a");
+  const nextScheduleUTC =
+    nextRunAt && formatInTimeZone(nextRunAt, "UTC", "hh:mm");
+  return (
+    <div className="bg-primary/5 px-4 py-1 justify-between flex items-center text-muted-foreground">
+      <div className="flex items-center gap-2 text-sm">
+        {lastRunAt ? (
+          <Link
+            href={`/workflow/runs/${workflow.id}/${workflow.lastRunId}`}
+            className="flex items-center gap-2 text-sm group"
+          >
+            <span>Last run:</span>
+            <ExecutionStatusIndicator
+              status={lastRunStatus as ExecutionStatus}
+            />
+            <ExecutionStatusLabel status={lastRunStatus as ExecutionStatus} />
+            <span>{lastRunStatus}</span>
+            <span>{formattedStartedAt}</span>
+            <ChevronRightIcon className="size-4 group-hover:translate-x-0 -translate-x-2 transition-all duration-300" />
+          </Link>
+        ) : (
+          <p>No runs yet</p>
+        )}
+      </div>
+      {workflow.nextRunAt && (
+        <div className="flex items-center text-sm gap-2">
+          <ClockIcon size={12} />
+          <span>Next run at:</span>
+          <span>{nextSchedule}</span>
+          <span className="text-xs">{nextScheduleUTC} UTC</span>
+        </div>
+      )}
+    </div>
+  );
+}

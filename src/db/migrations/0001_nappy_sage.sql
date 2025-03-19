@@ -1,1 +1,0 @@
-ALTER TABLE "roles" ALTER COLUMN "name" SET DATA TYPE role_enum;

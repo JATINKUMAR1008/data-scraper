@@ -6,6 +6,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import React from "react";
 import { MobileSidebar } from "./Sidebar";
@@ -15,16 +16,17 @@ export const BreadcrumbHeader = () => {
   const paths = pathName === "/" ? [""] : pathName.split("/");
   return (
     <div className="flex items-center flex-start">
-        <MobileSidebar/>
+      <MobileSidebar />
       <Breadcrumb>
         <BreadcrumbList>
           {paths.map((path, index) => (
             <React.Fragment key={index}>
               <BreadcrumbItem>
                 <BreadcrumbLink className="capitalize" href={`/${path}`}>
-                  {path === "" ? "home/" : `${path}/`}
+                  {path === "" ? "home" : path}
                 </BreadcrumbLink>
               </BreadcrumbItem>
+              {index !== paths.length - 1 && <BreadcrumbSeparator />}
             </React.Fragment>
           ))}
         </BreadcrumbList>

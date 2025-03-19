@@ -1,6 +1,9 @@
 import { InferInsertModel } from "drizzle-orm";
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-export const role_enum = pgEnum("roles_enum", ["ADMIN", "MEMBER", "USER"]);
+
+// Make sure the enum values match exactly with what's in the migration
+// export const role_enum = pgEnum("role_enum", ["USER", "ADMIN", "MEMBER"]);
+
 export const rolesTable = pgTable("roles", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull(),

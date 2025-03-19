@@ -5,11 +5,13 @@ import { useReactFlow } from "@xyflow/react";
 import { AppNode } from "@/types/appNodes";
 import { useCallback } from "react";
 import BrowserInstanceParams from "./params/BrowserInstanceParams";
+import SelectParams from "./params/SelectParam";
+import CredentialParams from "./params/CredentialsParams";
 
 export const NodeParamField = ({
   param,
   nodeId,
-  disabled
+  disabled,
 }: {
   param: TaskParam;
   nodeId: string;
@@ -40,14 +42,38 @@ export const NodeParamField = ({
         />
       );
     case TaskParamType.BROWSER_INSTANCE:
-      return <BrowserInstanceParams param={param} value={""} updateNodeParamValue={function (newValue: string): void {
-        throw new Error("Function not implemented.");
-      } } />;
+      return (
+        <BrowserInstanceParams
+          param={param}
+          value={""}
+          updateNodeParamValue={function (newValue: string): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      );
     default:
       return (
         <div className="w-full">
           <p className="text-xs text-muted-foreground">Not implemented</p>
         </div>
+      );
+    case TaskParamType.SELECT:
+      return (
+        <SelectParams
+          param={param}
+          value={value}
+          updateNodeParamValue={updateNodeParamValue}
+          disabled={disabled}
+        />
+      );
+    case TaskParamType.CREDENTIAL:
+      return (
+        <CredentialParams
+          param={param}
+          value={value}
+          updateNodeParamValue={updateNodeParamValue}
+          disabled={disabled}
+        />
       );
   }
 };

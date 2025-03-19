@@ -1,6 +1,6 @@
 export { userRoles, usersTable, authMethods, UserBalance } from "./user";
 export { organizationsTable } from "./org";
-export { rolesTable, role_enum } from "./roles";
+export { rolesTable } from "./roles";
 export {
   userRolesRelations,
   authMethodsRelations,
@@ -17,3 +17,4 @@ export {
   ExecutionPhase,
   ExecutionLogs,
 } from "./executions";
+export { credentialsTable } from "./credentials";

@@ -58,7 +58,7 @@ export const CreateWorkflowDialog = ({
         // toast.loading("Creating workflow .....", { id: "workflow-created" });
         mutate(values);
       });
-    //   toast.dismiss("workflow-created");
+      //   toast.dismiss("workflow-created");
     },
     [mutate]
   );
@@ -122,7 +122,7 @@ export const CreateWorkflowDialog = ({
               <button
                 aria-disabled={isPending}
                 type="submit"
-                className="w-full bg-white mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-muted-foreground  transition-colors duration-300 justify-center gap-1"
+                className="w-full bg-primary mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-primary/70  transition-colors duration-300 justify-center gap-1"
               >
                 {isPending ? "Submitting ...." : <>Proceed</>}
               </button>

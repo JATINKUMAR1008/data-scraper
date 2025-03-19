@@ -25,8 +25,8 @@ import { Browser, Page } from "puppeteer";
 import { Edge } from "@xyflow/react";
 import { LogCollector } from "@/types/logs";
 import { createLogCollector } from "../log";
-import { log } from "console";
-export async function ExecutionWorkflow(executionId: string) {
+
+export async function ExecutionWorkflow(executionId: string, nextRun?: Date) {
   const executionArray = await db.query.workflowExecutionTable.findMany({
     where: eq(workflowExecutionTable.id, Number(executionId)),
     with: {
@@ -44,7 +44,11 @@ export async function ExecutionWorkflow(executionId: string) {
   const environment: Environment = {
     phases: {},
   };
-  await initializeWorkflowExecution(executionId, execution.workflowId!);
+  await initializeWorkflowExecution(
+    executionId,
+    execution.workflowId!,
+    nextRun
+  );
   await initializePhaseStatuses(execution);
 
   let creditsConsumed = 0;
@@ -82,7 +86,8 @@ export async function ExecutionWorkflow(executionId: string) {
 
 async function initializeWorkflowExecution(
   executionId: string,
-  workflowId: number
+  workflowId: number,
+  nextRunAt?: Date
 ) {
   await db
     .update(workflowExecutionTable)
@@ -97,6 +102,7 @@ async function initializeWorkflowExecution(
       lastRunAt: new Date(),
       lastRunStatus: ExecutionStatus.RUNNING,
       lastRunId: Number(executionId),
+      ...(nextRunAt && { nextRunAt }),
     })
     .where(eq(workflowTable.id, workflowId));
 }
@@ -210,6 +216,7 @@ async function executePhase(
 ): Promise<boolean> {
   const runFn = ExecutorRegistry[node.data.type];
   if (!runFn) {
+    logCollector.error(`Executor not found for ${node.data.type}`);
     return false;
   }
   const executionEnvironment: ExecutionEnvironment<any> =
@@ -273,9 +280,9 @@ function createExecutionEnvironment(
 }
 async function cleanupEnvironment(environment: Environment) {
   if (environment.browser) {
-    await environment.browser.close().catch((error) => {
-      console.error("Error in closing browser", error);
-    });
+    // await environment.browser.close().catch((error) => {
+    //   console.error("Error in closing browser", error);
+    // });
   }
 }
 

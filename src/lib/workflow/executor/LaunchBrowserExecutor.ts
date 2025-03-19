@@ -4,6 +4,10 @@ import puppeteer from "puppeteer";
 import { LaunchBrowserTask } from "../task/LaunchBrowser";
 import { env } from "process";
 import chromium from "@sparticuz/chromium";
+
+const BROWSER_WS =
+  "wss://brd-customer-hl_df262467-zone-scraping_browser1:pjltb8w3w4j3@brd.superproxy.io:9222";
+
 export async function LaunchBrowserExecutor(
   environment: ExecutionEnvironment<typeof LaunchBrowserTask>
 ): Promise<boolean> {
@@ -12,11 +16,8 @@ export async function LaunchBrowserExecutor(
     console.log("Launching Browser", websiteUrl);
     let Browser = null;
     if (process.env.NODE_ENV === "production") {
-      Browser = await puppeteer.launch({
-        args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
-        headless: chromium.headless,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
+      Browser = await puppeteer.connect({
+        browserWSEndpoint: BROWSER_WS,
       });
     } else {
       Browser = await puppeteer.launch({

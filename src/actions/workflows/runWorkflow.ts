@@ -37,19 +37,32 @@ export async function RunWorkFlow(form: {
     where: eq(workflowTable.id, workflowId),
   });
 
-  if (!flowDefinition) {
-    throw new Error("Flow Definition is not defined");
+  if (!workflow) {
+    throw new Error("workflow not found");
   }
-  const flow = JSON.parse(flowDefinition);
-  const result = FlowExecutionPlan(flow.nodes, flow.edges);
-  if (result.error) {
-    throw new Error("Invalid Flow Definition");
+  let executionPlan: WorkFlowExecutionPlan;
+  let workflowDefinition = flowDefinition;
+  if (workflow.status === WorkflowStatus.PUBLISHED) {
+    if (!workflow.executionPlan) {
+      throw new Error("no execution plan is found in published workflow");
+    }
+    executionPlan = JSON.parse(workflow.executionPlan);
+    workflowDefinition = workflow.definition!;
+  } else {
+    if (!flowDefinition) {
+      throw new Error("Flow Definition is not defined");
+    }
+    const flow = JSON.parse(flowDefinition);
+    const result = FlowExecutionPlan(flow.nodes, flow.edges);
+    if (result.error) {
+      throw new Error("Invalid Flow Definition");
+    }
+    if (!result.executionPlan) {
+      throw new Error("Execution Plan not found");
+    }
+    executionPlan = result.executionPlan;
+    console.log("Execution Plan", executionPlan);
   }
-  if (!result.executionPlan) {
-    throw new Error("Execution Plan not found");
-  }
-  const executionPlan = result.executionPlan;
-  console.log("Execution Plan", executionPlan);
 
   const execution = await db
     .insert(workflowExecutionTable)
@@ -59,7 +72,7 @@ export async function RunWorkFlow(form: {
       trigger: WorkflowExecutionTrigger.MANUAL,
       status: ExecutionStatus.PENDING,
       startedAt: new Date(),
-      definition: flowDefinition || "{}",
+      definition: workflowDefinition || "{}",
     })
     .returning({
       id: workflowExecutionTable.id,
