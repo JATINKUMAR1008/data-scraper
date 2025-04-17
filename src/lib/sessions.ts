@@ -37,13 +37,13 @@ export async function decrypt(session: string | undefined = "") {
 export async function createSession(userId: string) {
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
   const session = await encrypt({ userId, expiresAt });
-
+  const isProd: boolean = process.env.NODE_ENV === "production";
   (await cookies()).set("session", session, {
     httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: "lax",
+    secure: isProd, // false on dev, true in prod over HTTPS
+    sameSite: isProd ? "none" : "lax",
     path: "/",
+    expires: expiresAt,
   });
 
   // redirect("/dashboard");
@@ -62,11 +62,11 @@ export async function verifySession() {
 
 export async function requireAuth() {
   const { isAuth, userId } = await verifySession();
-  
+
   if (!isAuth) {
     redirect("/signin");
   }
-  
+
   return { userId };
 }
 

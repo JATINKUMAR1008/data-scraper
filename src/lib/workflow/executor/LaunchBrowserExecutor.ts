@@ -6,7 +6,7 @@ import { env } from "process";
 import chromium from "@sparticuz/chromium";
 
 const BROWSER_WS =
-  "wss://brd-customer-hl_df262467-zone-scraping_browser1:pjltb8w3w4j3@brd.superproxy.io:9222";
+  "wss://brd-customer-hl_e382b5c4-zone-scraping_browser1:4vka66lxahar@brd.superproxy.io:9222";
 
 export async function LaunchBrowserExecutor(
   environment: ExecutionEnvironment<typeof LaunchBrowserTask>
