@@ -1,6 +1,6 @@
 import { waitForDebugger } from "@/lib/helpers/waitFor";
 import { Environment, ExecutionEnvironment } from "@/types/executor";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import { LaunchBrowserTask } from "../task/LaunchBrowser";
 import { env } from "process";
 import chromium from "@sparticuz/chromium";
