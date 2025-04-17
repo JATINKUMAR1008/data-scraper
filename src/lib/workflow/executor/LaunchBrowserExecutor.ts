@@ -1,6 +1,6 @@
 import { waitForDebugger } from "@/lib/helpers/waitFor";
 import { Environment, ExecutionEnvironment } from "@/types/executor";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import { LaunchBrowserTask } from "../task/LaunchBrowser";
 import { env } from "process";
 import chromium from "@sparticuz/chromium";
@@ -15,20 +15,15 @@ export async function LaunchBrowserExecutor(
     const websiteUrl = environment.getInput("Website Url");
     console.log("Launching Browser", websiteUrl);
     let Browser = null;
-    const isLocal = process.env.NODE_ENV === "development";
-    Browser = await puppeteer.launch({
-      args: [
-        ...chromium.args,
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-      ],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: isLocal
-        ? "/path/to/local/chromium" // Replace with local Chromium path for development
-        : await chromium.executablePath(),
-      headless: chromium.headless,
-    });
+    if (process.env.NODE_ENV === "production") {
+      Browser = await puppeteer.connect({
+        browserWSEndpoint: BROWSER_WS,
+      });
+    } else {
+      Browser = await puppeteer.launch({
+        headless: true,
+      });
+    }
     environment.log.info("Browser started successfully");
     environment.setBrowser(Browser);
     const page = await Browser.newPage();
