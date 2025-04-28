@@ -4,9 +4,9 @@ import puppeteer from "puppeteer";
 import { LaunchBrowserTask } from "../task/LaunchBrowser";
 import { env } from "process";
 import chromium from "@sparticuz/chromium";
+import WebSocket from "ws";
 
-const BROWSER_WS =
-  "wss://brd-customer-hl_e382b5c4-zone-scraping_browser1:4vka66lxahar@brd.superproxy.io:9222";
+const BROWSER_WS = process.env.BROWSER_SOCKET;
 
 export async function LaunchBrowserExecutor(
   environment: ExecutionEnvironment<typeof LaunchBrowserTask>
@@ -15,6 +15,10 @@ export async function LaunchBrowserExecutor(
     const websiteUrl = environment.getInput("Website Url");
     console.log("Launching Browser", websiteUrl);
     let Browser = null;
+
+    // Browser = await puppeteer.connect({
+    //   browserWSEndpoint: BROWSER_WS,
+    // });
     if (process.env.NODE_ENV === "production") {
       Browser = await puppeteer.connect({
         browserWSEndpoint: BROWSER_WS,
