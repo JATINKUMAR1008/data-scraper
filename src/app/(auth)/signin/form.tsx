@@ -11,7 +11,6 @@ export function LoginForm() {
   const [state, action] = useActionState(signIn, undefined);
   return (
     <div className="w-full">
-      
       <form className="flex flex-col gap-5" action={action}>
         <div className="flex flex-col gap-1 ">
           <Label htmlFor="email" className="text-muted-foreground text-xs">
@@ -60,7 +59,7 @@ const LoginButton = () => {
     <button
       aria-disabled={pending}
       type="submit"
-      className="w-full bg-white mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-muted-foreground  transition-colors duration-300 justify-center gap-1"
+      className="w-full bg-primary mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-primary/60  transition-colors duration-300 justify-center gap-1"
     >
       {pending ? (
         "Submitting ...."

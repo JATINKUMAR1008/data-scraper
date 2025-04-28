@@ -94,7 +94,7 @@ const SubmitButton = () => {
     <button
       aria-disabled={pending}
       type="submit"
-      className="w-full bg-white mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-muted-foreground  transition-colors duration-300 justify-center gap-1"
+      className="w-full bg-primary mt-2 text-background p-2 rounded-sm text-sm flex hover:black/10 items-center hover:bg-primary/50  transition-colors duration-300 justify-center gap-1"
     >
       {pending ? (
         "Submitting ...."
